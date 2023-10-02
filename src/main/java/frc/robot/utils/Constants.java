@@ -5,21 +5,46 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 public final class Constants {
 
+    public static final class IntakeConstants{
+
+        // TODO: ADJUST CONSTANTS
+        public static final int intakeMotorId = 30;
+        public static final int intakeMotorStallCurrentLimit = 40;
+        public static final int intakeMotorFreeSpinCurrentLimit = 40;
+        public static final boolean intakeMotorInverted = false;
+        public static final double openLoopRampRate = 1.0;
+
+        public static final double kP = 0.5;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+    }
+
     public static final class ArmConstants{
 
         // TODO: ADJUST CONSTANTS
         public static final int rotateMotorId = 20;
-        public static final int extensionMotorId = 21;
-        public static final int rotateCanCoderId = 22;
+        public static final int extensionMotorId = 22;
+        public static final int rotateCanCoderId = 21;
 
-        public static final double rotatekP = 0;
+        public static final boolean rotateMotorInverted = false;
+        public static final boolean extensionMotorInverted = false;
+        public static final boolean rotateCanCoderReversed = false;
+
+        public static final int rotateCanCoderOffset = 0;
+        
+        public static final int rotateMotorCurrentLimit = 50;
+        public static final int extensionMotorCurrentLimit = 50;
+
+        public static final double rotateMotorOpenLoopRampRate = 1.0;
+        public static final double extensionMotorOpenLoopRampRate = 1.0;
+
+        public static final double rotatekP = 0.5;
         public static final double rotatekI = 0;
         public static final double rotatekD = 0;
 
-        public static final double extensionkP = 0;
+        public static final double extensionkP = 0.5;
         public static final double extensionkI = 0;
         public static final double extensionkD = 0;
-
     }
 
     public static final class DriveConstants{
@@ -97,5 +122,6 @@ public final class Constants {
     public static final class IOConstants{
 
         public static final double kDeadband = 0.05;
+
     }
 }

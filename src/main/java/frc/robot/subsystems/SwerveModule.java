@@ -47,8 +47,7 @@ public class SwerveModule{
         driveMotor.config_kD(0, 0.0);
         driveMotor.config_kF(0, 0.0);
         driveMotor.configSupplyCurrentLimit(driveSupplyLimit);
-        //driveMotor.configOpenloopRamp(0.25);
-        //driveMotor.configAllSettings(CtreConfigs.swerveDriveFXConfig);
+        driveMotor.configOpenloopRamp(0.25);
         driveMotor.setInverted(driveMotorReversed);
         driveMotor.setNeutralMode(NeutralMode.Brake);
 
@@ -63,8 +62,7 @@ public class SwerveModule{
         turnMotor.config_kD(0, 0.0);
         turnMotor.config_kF(0, 0.0);
         turnMotor.configSupplyCurrentLimit(turnSupplyLimit);
-        //turnMotor.configOpenloopRamp(0.25);
-        //turnMotor.configAllSettings(CtreConfigs.swerveTurnFXConfig);
+        turnMotor.configOpenloopRamp(0.25);
         turnMotor.setInverted(turnMotorReversed);
         turnMotor.setNeutralMode(NeutralMode.Brake);
 
