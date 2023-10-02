@@ -3,13 +3,12 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,8 +33,8 @@ public class Arm extends SubsystemBase {
     private SlewRateLimiter rotateSlewRateLimiter;
     private SlewRateLimiter extensionSlewRateLimiter;
 
-    private ArmFeedforward rotateFeedforward;
-    private ElevatorFeedforward extensionFeedforward;
+    //private ArmFeedforward rotateFeedforward;
+    //private ElevatorFeedforward extensionFeedforward;
 
     public Arm() {
 
@@ -45,25 +44,37 @@ public class Arm extends SubsystemBase {
         rotateMotor.setIdleMode(IdleMode.kBrake);
         extensionMotor.setIdleMode(IdleMode.kBrake);
 
+        rotateMotor.setSmartCurrentLimit(ArmConstants.rotateMotorCurrentLimit);
+        extensionMotor.setSmartCurrentLimit(ArmConstants.extensionMotorCurrentLimit);
+
+        rotateMotor.setInverted(ArmConstants.rotateMotorInverted);
+        extensionMotor.setInverted(ArmConstants.extensionMotorInverted);
+
+        rotateMotor.setOpenLoopRampRate(ArmConstants.rotateMotorOpenLoopRampRate);
+        extensionMotor.setOpenLoopRampRate(ArmConstants.extensionMotorOpenLoopRampRate);
+
         extensionMotorEncoder = extensionMotor.getEncoder();
         extensionMotorEncoder.setPositionConversionFactor(0.02367145);
+        
+        rotateMotor.burnFlash();
+        extensionMotor.burnFlash();
 
         rotateCanCoder = new CANCoder(ArmConstants.rotateCanCoderId);
         rotateCanCoder.configFactoryDefault();
-        rotateCanCoder.configMagnetOffset(0); // TODO: CONFIG OFFSET
+        rotateCanCoder.configMagnetOffset(ArmConstants.rotateCanCoderOffset); // TODO: CONFIG OFFSET
         rotateCanCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-        rotateCanCoder.configSensorDirection(false);
+        rotateCanCoder.configSensorDirection(ArmConstants.rotateCanCoderReversed);
         rotateCanCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         rotateCanCoder.configGetFeedbackTimeBase();
 
-        rotateFeedforward = new ArmFeedforward(0.5, 0.5, 0.5, 0.5);
-        extensionFeedforward = new ElevatorFeedforward(0.5, 0.5, 0.5, 0.05);
+        //rotateFeedforward = new ArmFeedforward(0.5, 0.5, 0.5, 0.5);
+        //extensionFeedforward = new ElevatorFeedforward(0.5, 0.5, 0.5, 0.05);
 
         rotatePidController = new PIDController(ArmConstants.rotatekP, ArmConstants.rotatekI, ArmConstants.rotatekD);
         extensionPidController = new PIDController(ArmConstants.extensionkP, ArmConstants.extensionkI, ArmConstants.extensionkD);
 
-        rotateSlewRateLimiter = new SlewRateLimiter(5, 0, 0);
-        extensionSlewRateLimiter = new SlewRateLimiter(5, 0, 0);
+        rotateSlewRateLimiter = new SlewRateLimiter(5, -5, 0);
+        extensionSlewRateLimiter = new SlewRateLimiter(5, -5, 0);
 
         rotationSetpointRadians = 0;
         extensionSetpointMeters = 0;
@@ -73,12 +84,15 @@ public class Arm extends SubsystemBase {
     public void periodic() {
         // TODO: Put SmartDashboard Data Here
         updateArmExtensionMeters();
+        updateArmRotationRadians();
         SmartDashboard.putNumber("Arm Extension Setpoint", extensionSetpointMeters);
     }
 
     public void updateArmExtensionMeters(){
 
         double calculated = extensionPidController.calculate(extensionMotorEncoder.getPosition(), extensionSetpointMeters);
+
+        // Possibly put feedfoward control here
 
         extensionMotor.set(calculated);
 
@@ -96,6 +110,8 @@ public class Arm extends SubsystemBase {
         double canCoderValueRad = rotateCanCoder.getAbsolutePosition() * (2 * Math.PI / 4096.0);
 
         double calculated = rotatePidController.calculate(canCoderValueRad, rotationSetpointRadians);
+
+        // Possibly put feedfoward control here
 
         rotateMotor.set(calculated);
 
