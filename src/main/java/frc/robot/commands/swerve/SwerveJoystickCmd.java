@@ -70,8 +70,6 @@ public class SwerveJoystickCmd extends CommandBase{
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
         }
         
-
-        //TODO: Look Swerve Drive Kinematics
         SwerveModuleState[] moduleStates = DriveConstants.kSwerveDriveKinematics.toSwerveModuleStates(chassisSpeeds);
         swerveSubsystem.setModuleStates(moduleStates);
     }

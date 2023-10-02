@@ -5,10 +5,27 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
 public final class Constants {
 
+    public static final class ArmConstants{
+
+        // TODO: ADJUST CONSTANTS
+        public static final int rotateMotorId = 20;
+        public static final int extensionMotorId = 21;
+        public static final int rotateCanCoderId = 22;
+
+        public static final double rotatekP = 0;
+        public static final double rotatekI = 0;
+        public static final double rotatekD = 0;
+
+        public static final double extensionkP = 0;
+        public static final double extensionkI = 0;
+        public static final double extensionkD = 0;
+
+    }
+
     public static final class DriveConstants{
 
-        public static final double kWheelBase = 21.5; //@TODO CHANGE TO ROBOT
-        public static final double kTrackWidth = 21.5; //@TODO CHANGE TO ROBOT
+        public static final double kWheelBase = 23.5;
+        public static final double kTrackWidth = 16;
 
         public static final SwerveDriveKinematics kSwerveDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, kTrackWidth / 2),
